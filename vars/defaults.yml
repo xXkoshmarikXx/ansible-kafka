@@ -1,0 +1,36 @@
+---
+discord_webhook: https://discord.com/api/webhooks/{{ discord_message_webhook_id }}/{{ discord_message_webhook_token }}
+discord_channel: "#notifications"
+private_dns: kafka
+private_domain: pension-stg.local
+app_user: "kafka"
+app_group: "{{ app_user }}"
+users_groups:
+  - name: "{{ app_group }}"
+  - name: "consult"
+users:
+  - name: "{{ app_user }}"
+    group: "{{ app_group }}"
+    append: yes
+  - name: consult
+    sudo_options: "ALL=(ALL) NOPASSWD: /bin/systemctl restart kafka"
+    groups:
+      - consult
+      - kafka
+
+private_ip: "{{ ansible_default_ipv4['address'] }}"
+aws_iam_role: "kafka-role"
+disk:
+  name: /dev/sdb
+  mount_options: defaults,noatime
+  mount: /data
+  fstype: xfs
+  size: 5
+  user: "{{ app_user }}"
+  group: "{{ app_group }}"
+  kms_key_id: "{{ disk_kms_key_id }}"
+  delete_on_termination: no
+  app: kafka-data
+
+consul_service_start_and_enable: false
+consul_template_service_start_and_enable: false

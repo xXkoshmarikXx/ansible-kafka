@@ -1,0 +1,1 @@
+curl -O https://raw.githubusercontent.com/inqwise/ansible-automation-toolkit/default/packer/goldenimage.pkr.hcl && packer build --only=amazon-ebs.amzn2023_arm64 -var cpu_arch=arm64 -var 'aws_profile=pension-stg' -var 'tag=latest' -var app=kafka -var 'aws_region=eu-west-1' -var 'base_path=s3://bootstrap-pension-stg/playbooks' goldenimage.pkr.hcl
